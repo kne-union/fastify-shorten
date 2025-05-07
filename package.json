@@ -7,7 +7,6 @@
     "init": "husky",
     "dev": "nodemon ./index.js",
     "start": "node ./index.js",
-    "doc": "node ./open-api.js",
     "build:md": "npx @kne/md-doc",
     "start:md": "npx @kne/md-doc --watch",
     "prettier": "prettier --config .prettierrc --write '{libs/**/*,index}.{js,jsx,ts,tsx,json,css,scss}'",
