@@ -1,3 +1,2 @@
 npm run build:md
-npm run doc
 npm run lint-staged
