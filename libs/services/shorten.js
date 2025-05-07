@@ -63,6 +63,17 @@ module.exports = fp(async (fastify, options) => {
     return target;
   };
 
-  fastify.shorten.services.sign = sign;
-  fastify.shorten.services.decode = decode;
+  const remove = async shorten => {
+    const shortenItem = await models.shorten.findOne({ where: { shorten: shorten.toUpperCase() } });
+    if (!shortenItem) {
+      return;
+    }
+    await shortenItem.destroy();
+  };
+
+  Object.assign(fastify.shorten.services, {
+    sign,
+    decode,
+    remove
+  });
 });
