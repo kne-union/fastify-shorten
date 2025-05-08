@@ -45,7 +45,7 @@
   "homepage": "https://github.com/kne-union/fastify-shorten#readme",
   "peerDependencies": {
     "@kne/fastify-namespace": "*",
-    "@kne/fastify-sequelize": ">=2",
+    "@kne/fastify-sequelize": "*",
     "fastify-plugin": ">=5"
   },
   "devDependencies": {
