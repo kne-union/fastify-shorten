@@ -1,5 +1,5 @@
 const fp = require('fastify-plugin');
-const path = require('path');
+const path = require('node:path');
 
 module.exports = fp(
   async (fastify, options) => {
