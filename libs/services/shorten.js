@@ -27,9 +27,12 @@ module.exports = fp(async (fastify, options) => {
   const sign = async (target, expires) => {
     const hash = generateHash(target);
     const historyShorten = await models.shorten.findOne({ where: { hash } });
-    if (historyShorten) {
+    if (expires && Date.now() > expires) {
+      await historyShorten.destroy();
+    } else if (historyShorten) {
       return historyShorten.shorten;
     }
+
     const generateUniqueShortCode = async () => {
       let shortCode;
       let attempts = 0;
