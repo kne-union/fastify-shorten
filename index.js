@@ -3,7 +3,7 @@ const path = require('node:path');
 
 module.exports = fp(async (fastify, options) => {
   options = Object.assign({}, {
-    name: 'shorten', maxAttempts: 10, length: 6, dbTableNamePrefix: 't_'
+    name: 'shorten', headerName: 'x-user-code', maxAttempts: 10, length: 6, dbTableNamePrefix: 't_shorten_'
   }, options);
 
   fastify.register(require('@kne/fastify-namespace'), {
@@ -13,14 +13,14 @@ module.exports = fp(async (fastify, options) => {
       prefix: options.dbTableNamePrefix
     })], ['services', path.resolve(__dirname, './libs/services')], ['authenticate', {
       code: async request => {
-        const code = request.headers['x-user-code'];
+        const code = request.headers[options.headerName];
         if (!code) {
-          throw new Error('X-User-Code is required');
+          throw new Error(`${options.headerName} is required`);
         }
         try {
           request.authenticatePayload = JSON.parse(await fastify[options.name].services.decode(code));
         } catch (e) {
-          throw new Error('X-User-Code is invalid');
+          throw new Error(`${options.headerName} is invalid`);
         }
       }
     }]]
