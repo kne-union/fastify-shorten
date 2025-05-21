@@ -19,6 +19,7 @@ module.exports = ({ DataTypes }) => {
       }
     },
     options: {
+      comment: '短链接',
       indexes: [
         {
           name: 'shorten_unique_key',
