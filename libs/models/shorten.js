@@ -22,12 +22,10 @@ module.exports = ({ DataTypes }) => {
       comment: '短链接',
       indexes: [
         {
-          name: 'shorten_unique_key',
           unique: true,
           fields: ['shorten', 'deleted_at']
         },
         {
-          name: 'shorten_hash_unique_key',
           unique: true,
           fields: ['hash', 'deleted_at']
         }
