@@ -1,5 +1,5 @@
 const fp = require('fastify-plugin');
-const crypto = require('crypto');
+const crypto = require('node:crypto');
 
 // 生成哈希的函数
 const generateHash = input => {
@@ -14,15 +14,10 @@ function generateSecureRandomString(length) {
 }
 
 module.exports = fp(async (fastify, options) => {
-  options = Object.assign(
-    {},
-    {
-      maxAttempts: 10,
-      length: 6
-    },
-    options
-  );
-  const { models } = fastify.shorten;
+  options = Object.assign({}, {
+    maxAttempts: 10, length: 6
+  }, options);
+  const { models } = fastify[options.name];
 
   const sign = async (target, expires) => {
     const hash = generateHash(target);
@@ -74,9 +69,7 @@ module.exports = fp(async (fastify, options) => {
     await shortenItem.destroy();
   };
 
-  Object.assign(fastify.shorten.services, {
-    sign,
-    decode,
-    remove
+  Object.assign(fastify[options.name].services, {
+    sign, decode, remove
   });
 });
