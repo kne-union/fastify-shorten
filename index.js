@@ -1,5 +1,6 @@
 const fp = require('fastify-plugin');
 const path = require('node:path');
+const {Unauthorized} = require('http-error');
 
 module.exports = fp(async (fastify, options) => {
   options = Object.assign({}, {
@@ -15,12 +16,12 @@ module.exports = fp(async (fastify, options) => {
       code: async request => {
         const code = request.headers[options.headerName];
         if (!code) {
-          throw new Error(`${options.headerName} is required`);
+          throw new Unauthorized(`${options.headerName} is required`);
         }
         try {
           request.authenticatePayload = JSON.parse(await fastify[options.name].services.decode(code));
         } catch (e) {
-          throw new Error(`${options.headerName} is invalid`);
+          throw new Unauthorized(`${options.headerName} is invalid`);
         }
       }
     }]]
