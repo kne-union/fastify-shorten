@@ -50,15 +50,20 @@ module.exports = fp(async (fastify, options) => {
   };
 
   const decode = async shorten => {
-    const shortenItem = await models.shorten.findOne({ where: { shorten: shorten.toUpperCase() } });
-    if (!shortenItem) {
-      throw new Error('shorten error');
-    }
+    const shortenItem = await getShorten(shorten);
     const { target, expires } = shortenItem;
     if (expires && Date.now() > expires) {
       throw new Error('shorten expired');
     }
     return target;
+  };
+
+  const getShorten = async shorten => {
+    const shortenItem = await models.shorten.findOne({ where: { shorten: shorten.toUpperCase() } });
+    if (!shortenItem) {
+      throw new Error('shorten error');
+    }
+    return shortenItem;
   };
 
   const remove = async shorten => {
@@ -70,6 +75,6 @@ module.exports = fp(async (fastify, options) => {
   };
 
   Object.assign(fastify[options.name].services, {
-    sign, decode, remove
+    sign, decode, getShorten, remove
   });
 });
