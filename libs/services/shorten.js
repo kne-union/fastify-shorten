@@ -25,7 +25,7 @@ module.exports = fp(async (fastify, options) => {
   const { models } = fastify[options.name];
 
   const sign = async (target, expires) => {
-    const hash = generateHash({ target, expires });
+    const hash = generateHash(`${target}_${expires}`);
     const historyShorten = await models.shorten.findOne({ where: { hash } });
     if (historyShorten?.expires && Date.now() > historyShorten.expires) {
       await historyShorten.destroy();
