@@ -14,13 +14,18 @@ function generateSecureRandomString(length) {
 }
 
 module.exports = fp(async (fastify, options) => {
-  options = Object.assign({}, {
-    maxAttempts: 10, length: 6
-  }, options);
+  options = Object.assign(
+    {},
+    {
+      maxAttempts: 10,
+      length: 6
+    },
+    options
+  );
   const { models } = fastify[options.name];
 
   const sign = async (target, expires) => {
-    const hash = generateHash(target);
+    const hash = generateHash({ target, expires });
     const historyShorten = await models.shorten.findOne({ where: { hash } });
     if (historyShorten?.expires && Date.now() > historyShorten.expires) {
       await historyShorten.destroy();
@@ -75,6 +80,9 @@ module.exports = fp(async (fastify, options) => {
   };
 
   Object.assign(fastify[options.name].services, {
-    sign, decode, getShorten, remove
+    sign,
+    decode,
+    getShorten,
+    remove
   });
 });
